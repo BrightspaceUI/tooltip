@@ -55,12 +55,9 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-tooltip">
 				display: inline-block;
 			}
 
-			:host([force-show]) {
-				-webkit-animation: d2l-tooltip-bottom-animation 200ms ease;
-				animation: d2l-tooltip-bottom-animation 200ms ease;
-			}
-
-			:host([showing]):not([force-show]) {
+			:host([force-show]),
+			:host([showing]):not([force-show]),
+			:host([position="bottom"]) {
 				-webkit-animation: d2l-tooltip-bottom-animation 200ms ease;
 				animation: d2l-tooltip-bottom-animation 200ms ease;
 			}
@@ -177,7 +174,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-tooltip">
 			<slot></slot>
 		</div>
 	</template>
-
+	
 </dom-module>`;
 
 document.head.appendChild($_documentContainer.content);
