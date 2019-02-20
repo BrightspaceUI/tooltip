@@ -36,7 +36,6 @@
     "eslint": "^4.15.0",
     "eslint-config-brightspace": "^0.4.0",
     "eslint-plugin-html": "^4.0.1",
-    "frau-ci": "^1.33.2",
     "galenframework": "^2.3.6",
     "polymer-cli": "^1.9.4",
     "rimraf": "^2.6.2",
@@ -44,7 +43,7 @@
     "sauceconnect-runner": "github:Brightspace/sauceconnect-runner",
     "wct-browser-legacy": "^1.0.1"
   },
-  "version": "3.0.4",
+  "version": "",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
