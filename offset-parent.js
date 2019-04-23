@@ -2,17 +2,17 @@
 // Implementation of draft proposal: https://drafts.csswg.org/cssom-view/#dom-htmlelement-offsetparent
 // Original implementation: https://www.w3.org/TR/cssom-view/#dom-htmlelement-offsetparent
 const getOffsetParent = function(ele) {
+	// Fallback to built-in
+	if (!window.ShadowRoot) {
+		return ele.offsetParent;
+	}
+
 	if (
 		!getParent(ele) ||
 		ele.tagName === 'BODY' ||
 		window.getComputedStyle(ele).position === 'fixed'
 	) {
 		return null;
-	}
-
-	// Fallback to built-in
-	if (!window.ShadowRoot) {
-		return ele.offsetParent;
 	}
 
 	let currentEle = getParent(ele);
@@ -32,7 +32,6 @@ const getOffsetParent = function(ele) {
 
 	return null;
 };
-
 
 const getParent = function(ele) {
 	// Check if slotted
