@@ -17,6 +17,7 @@ import 'd2l-typography/d2l-typography-shared-styles.js';
 import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
 import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+import { getOffsetParent } from './offset-parent.js';
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<dom-module id="d2l-tooltip">
@@ -174,7 +175,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-tooltip">
 			<slot></slot>
 		</div>
 	</template>
-	
+
 </dom-module>`;
 
 document.head.appendChild($_documentContainer.content);
@@ -324,20 +325,21 @@ Polymer({
 	},
 
 	updatePosition: function() {
-		if (!this.customTarget && (!this._target || !this.offsetParent)) {
+		const offsetParent = getOffsetParent(this);
+		if (!this.customTarget && (!this._target || !offsetParent)) {
 			return;
 		}
 
 		var targetRect = this.customTarget ? this.customTarget : this._target.getBoundingClientRect();
 		var thisRect = this.getBoundingClientRect();
-		var parentRect = (this.customTarget || this.offsetParent.tagName === 'BODY') ?
+		var parentRect = (this.customTarget || offsetParent.tagName === 'BODY') ?
 			{ left: 0, top: 0, right: 0, bottom: 0 } :
-			this.offsetParent.getBoundingClientRect();
+			offsetParent.getBoundingClientRect();
 
 		var targetPositions = this._getTargetPositions(targetRect, parentRect);
 		var tooltipPositions = this._getTooltipPositions(targetPositions, thisRect, targetRect);
 
-		var boundaryParent = this.offsetParent ? this.offsetParent.getBoundingClientRect() : { left: 0, top: 0, right: 0, bottom: 0 };
+		var boundaryParent = offsetParent ? offsetParent.getBoundingClientRect() : { left: 0, top: 0, right: 0, bottom: 0 };
 		var boundaryShifts = this._updateTooltipPositionsForBoundary(tooltipPositions, boundaryParent);
 
 		this._setTooltipStyle(tooltipPositions, targetPositions);
@@ -353,8 +355,9 @@ Polymer({
 	},
 
 	_getScrollVals: function() {
-		if (this.offsetParent) {
-			var parentStyle = window.getComputedStyle(this.offsetParent);
+		const offsetParent = getOffsetParent(this);
+		if (offsetParent) {
+			var parentStyle = window.getComputedStyle(offsetParent);
 			return (parentStyle && parentStyle.getPropertyValue('position') === 'static') ?
 				{ xScroll: window.pageXOffset, yScroll: window.pageYOffset } :
 				{ xScroll: 0, yScroll: 0 };
