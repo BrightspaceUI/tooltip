@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+		<title>offset-parent test</title>
+		<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+		<script src="../../wct-browser-legacy/browser.js"></script>
+		<script type="module" src="../../@polymer/iron-test-helpers/mock-interactions.js"></script>
+		<style>
+			.relative {
+				position: relative;
+			}
+			.static {
+				position: static;
+			}
+		</style>
+	</head>
+	<body>
+		<test-fixture id="direct-parent">
+			<template><div>
+					<div class="relative expected">
+						<div class="child"></div>
+					</div>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="indirect-parent">
+			<template><div>
+					<div class="relative expected">
+						<div>
+							<div class="child"></div>
+						</div>
+					</div>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="td">
+			<template><div>
+				<table>
+					<td class="static expected">
+						<div class="child"></div>
+					</td>
+				</table>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="th">
+			<template><div>
+				<table>
+					<th class="static expected">
+						<div class="child"></div>
+					</th>
+				</table>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="table">
+			<template><div>
+				<table class="static expected">
+					<tbody class="child"></tbody>
+				</table>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="wrapper-simple">
+			<template><div>
+				<test-wrapper wrapper-id="expected">
+					<div class="child"></div>
+				</test-wrapper>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="wrapper-inside">
+			<template><div>
+				<test-wrapper>
+					<div class="relative expected">
+						<div class="child"></div>
+					<div>
+				</test-wrapper>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="wrapper-nested">
+			<template><div>
+				<test-wrapper>
+					<test-wrapper wrapper-id="expected">
+						<div class="child"></div>
+					</test-wrapper>
+				</test-wrapper>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="wrapper-passthrough">
+			<template><div>
+				<div class="relative expected">
+					<test-wrapper>
+						<div class="child"></div>
+					</test-wrapper>
+				<div>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="wrapper-is-parent">
+			<template><div>
+				<test-wrapper class="relative expected">
+					<div class="child"></div>
+				</test-wrapper>
+			</div></template>
+		</test-fixture>
+
+		<test-fixture id="nested-wrapper-is-parent">
+			<template><div>
+				<test-wrapper class="relative expected">
+					<test-wrapper>
+						<div class="child"></div>
+					</test-wrapper>
+				</test-wrapper>
+			</div></template>
+		</test-fixture>
+
+		<div id="fixed" style="position: fixed;">
+		</div>
+
+		<div id="bodyIsParent">
+		</div>
+
+		<script type="module">
+import { getOffsetParent } from '../offset-parent.js';
+describe('offset-parent', function() {
+	[
+		'direct-parent',
+		'indirect-parent',
+		'td',
+		'th',
+		'table',
+		'wrapper-inside',
+		'wrapper-passthrough',
+		'wrapper-is-parent',
+		'nested-wrapper-is-parent'
+	].forEach(fixtureName => {
+		it(fixtureName, function() {
+			const fixt = fixture(fixtureName);
+			const child = fixt.querySelector('.child');
+			const expected = fixt.querySelector('.expected');
+			expect(getOffsetParent(child)).to.equal(expected);
+		});
+	});
+
+	it('wrapper-simple', function() {
+		const fixt = fixture('wrapper-simple');
+		const child = fixt.querySelector('.child');
+		expect(getOffsetParent(child).id).to.equal('expected');
+	});
+
+	it('wrapper-nested', function() {
+		const fixt = fixture('wrapper-nested');
+		const child = fixt.querySelector('.child');
+		expect(getOffsetParent(child).id).to.equal('expected');
+	});
+
+	it('fallback-when-shadowroot-undefined', function() {
+		const tempShadowRoot = window.ShadowRoot;
+		window.ShadowRoot = false;
+		const child = {
+			offsetParent: 'this is the offsetParent'
+		};
+		expect(getOffsetParent(child)).to.equal(child.offsetParent);
+		window.ShadowRoot = tempShadowRoot;
+	});
+
+	it('body', function() {
+		const body = document.querySelector('body');
+		expect(getOffsetParent(body)).to.equal(null);
+	});
+
+	it('orphan', function() {
+		const child = document.createElement('div');
+		expect(getOffsetParent(child)).to.equal(null);
+	});
+
+	it('orphan-with-extra-steps', function() {
+		const grandparent = document.createElement('div');
+		const parent = document.createElement('div');
+		const child = document.createElement('div');
+		grandparent.appendChild(parent);
+		parent.appendChild(child);
+		expect(getOffsetParent(child)).to.equal(null);
+	});
+
+	it('fixed', function() {
+		const fixed = document.querySelector('#fixed');
+		expect(getOffsetParent(fixed)).to.equal(null);
+	});
+
+	it('body-is-parent', function() {
+		const fixed = document.querySelector('#bodyIsParent');
+		const body = document.querySelector('body');
+		expect(getOffsetParent(fixed)).to.equal(body);
+	});
+});
+		</script>
+		<script type="module">
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+
+class TestWrapper extends PolymerElement {
+	static get template() {
+		return html`
+			<style>
+				#expected {
+					position: relative;
+				}
+			</style>
+			<div id=[[wrapperId]]>
+				<slot></slot>
+			</div>
+		`;
+	}
+	static get properties() {
+		return {
+			wrapperId: {
+				type: String,
+				value: 'notExpected'
+			}
+		};
+	}
+}
+
+window.customElements.define('test-wrapper', TestWrapper);
+		</script>
+	</body>
+</html>

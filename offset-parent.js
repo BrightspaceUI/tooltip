@@ -21,7 +21,7 @@ const getOffsetParent = function(ele) {
 		const tagName = currentEle.tagName;
 
 		if (
-			position !== 'static' ||
+			(position && position !== 'static') ||
 			tagName === 'BODY' ||
 			position === 'static' && (tagName === 'TD' || tagName === 'TH' || tagName === 'TABLE')
 		) {
