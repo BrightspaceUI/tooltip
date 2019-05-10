@@ -59,7 +59,6 @@ describe('d2l-tooltip', function() {
 		});
 
 		it('should not trigger the hide event from mouseleave when target is focused', function(done) {
-			this.timeout(1500);
 			const eventTimeout = setTimeout(function() {
 				expect(tooltip.hasAttribute('showing')).to.equal(true);
 				done();
