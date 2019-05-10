@@ -241,6 +241,11 @@ Polymer({
 			value: false
 		},
 
+		_focusLock: {
+			type: Boolean,
+			value: false
+		},
+
 		forceShow: {
 			type: Boolean,
 			value: false,
@@ -312,7 +317,7 @@ Polymer({
 	},
 
 	hide: function() {
-		if (this._tappedOn || !this.showing) {
+		if (this._tappedOn || !this.showing || this._focusLock) {
 			return;
 		}
 
@@ -342,6 +347,16 @@ Polymer({
 
 		this._setTooltipStyle(tooltipPositions, targetPositions);
 		this._setTriangleStyle(thisRect, tooltipPositions, targetPositions, boundaryShifts);
+	},
+
+	_onFocus: function() {
+		this._focusLock = true;
+		this.show();
+	},
+
+	_onBlur: function() {
+		this._focusLock = false;
+		this.hide();
 	},
 
 	_updateForceShow: function(forceShow) {
@@ -499,9 +514,9 @@ Polymer({
 	_addListeners: function() {
 		if (this._target && !this.forceShow) {
 			this.listen(this._target, 'mouseenter', 'show');
-			this.listen(this._target, 'focus', 'show');
+			this.listen(this._target, 'focus', '_onFocus');
 			this.listen(this._target, 'mouseleave', 'hide');
-			this.listen(this._target, 'blur', 'hide');
+			this.listen(this._target, 'blur', '_onBlur');
 			this.listen(this._target, 'tap', '_toggle');
 			this.listen(this._target, 'keydown', '_onKeydown');
 		}
@@ -545,9 +560,9 @@ Polymer({
 	_removeListeners: function() {
 		if (this._target) {
 			this.unlisten(this._target, 'mouseenter', 'show');
-			this.unlisten(this._target, 'focus', 'show');
+			this.unlisten(this._target, 'focus', '_onFocus');
 			this.unlisten(this._target, 'mouseleave', 'hide');
-			this.unlisten(this._target, 'blur', 'hide');
+			this.unlisten(this._target, 'blur', '_onBlur');
 			this.unlisten(this._target, 'tap', '_toggle');
 			this.unlisten(this._target, 'keydown', '_onKeydown');
 		}

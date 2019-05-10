@@ -100,19 +100,19 @@ setTimeout(function() {
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<div class="hover-link-container">
-		<span class="box" id="bottom">Hover me (bottom)</span>
+		<span class="box" id="bottom" tabindex="0">Hover me (bottom)</span>
 		<d2l-tooltip position="bottom" for="bottom">Bottom</d2l-tooltip>
 		<br>
-		<span class="box" id="top">Hover me (top)</span>
+		<span class="box" id="top" tabindex="0">Hover me (top)</span>
 		<d2l-tooltip position="top" for="top">Top</d2l-tooltip>
 		<br>
-		<span class="box" id="left">Hover me (left)</span>
+		<span class="box" id="left" tabindex="0">Hover me (left)</span>
 		<d2l-tooltip position="left" for="left">Left</d2l-tooltip>
 		<br>
-		<span class="box" id="right">Hover me (right)</span>
+		<span class="box" id="right" tabindex="0">Hover me (right)</span>
 		<d2l-tooltip position="right" for="right">Right</d2l-tooltip>
 		<br>
-		<span class="box" id="mixin">Mixin Tooltip (right)</span>
+		<span class="box" id="mixin" tabindex="0">Mixin Tooltip (right)</span>
 		<d2l-tooltip class="mixin-tooltip" position="right" for="mixin">
 			Use custom parameters to style the tooltip.
 		</d2l-tooltip>
@@ -131,7 +131,7 @@ $_documentContainer.innerHTML = `<div class="hover-link-container">
 		<br>
 		<div class="container">
 			<div class="contained">
-				<span class="box" id="top-contained">Hover me, I have boundaries!</span>
+				<span class="box" id="top-contained" tabindex="0">Hover me, I have boundaries!</span>
 				<d2l-tooltip tap-toggle="" position="top" for="top-contained">This is a tooltip positioned inside a box with "overflow: hidden"</d2l-tooltip>
 			</div>
 		</div>
