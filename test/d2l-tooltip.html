@@ -58,11 +58,30 @@ describe('d2l-tooltip', function() {
 			tooltipFixture.querySelector('#basic-span').focus();
 		});
 
-		it('should trigger the hide event when target is focused', function(done) {
+		it('should not trigger the hide event from mouseleave when target is focused', function(done) {
+			this.timeout(1500);
+			const eventTimeout = setTimeout(function() {
+				expect(tooltip.hasAttribute('showing')).to.equal(true);
+				done();
+			}, 1000);
 			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
 				requestAnimationFrame(function() {
 					const mouseleaveEvent = new Event('mouseleave');
 					tooltipFixture.querySelector('span').dispatchEvent(mouseleaveEvent);
+				});
+			});
+			tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
+				clearTimeout(eventTimeout);
+				done('Tooltip hide event was triggered!');
+			});
+			tooltipFixture.querySelector('span').focus();
+		});
+
+		it('should trigger the hide event from blur when target is focused', function(done) {
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				requestAnimationFrame(function() {
+					const blurEvent = new Event('blur');
+					tooltipFixture.querySelector('span').dispatchEvent(blurEvent);
 				});
 			});
 			tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
