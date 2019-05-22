@@ -237,6 +237,11 @@ Polymer({
 			value: null
 		},
 
+		disableFocusLock: {
+			type: Boolean,
+			value: false
+		},
+
 		_tappedOn: {
 			type: Boolean,
 			value: false
@@ -351,8 +356,10 @@ Polymer({
 		this._setTriangleStyle(thisRect, tooltipPositions, targetPositions, boundaryShifts);
 	},
 
-	_onFocus: function() {
-		this._focusLock = true;
+	_onFocus: function () {
+		if (!this.disableFocusLock) {
+			this._focusLock = true;
+		}
 		this.show();
 	},
 
