@@ -237,6 +237,11 @@ Polymer({
 			value: null
 		},
 
+		disableFocusLock: {
+			type: Boolean,
+			value: false
+		},
+
 		_tappedOn: {
 			type: Boolean,
 			value: false
@@ -352,7 +357,9 @@ Polymer({
 	},
 
 	_onFocus: function() {
-		this._focusLock = true;
+		if (!this.disableFocusLock) {
+			this._focusLock = true;
+		}
 		this.show();
 	},
 
