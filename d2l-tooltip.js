@@ -356,7 +356,7 @@ Polymer({
 		this._setTriangleStyle(thisRect, tooltipPositions, targetPositions, boundaryShifts);
 	},
 
-	_onFocus: function () {
+	_onFocus: function() {
 		if (!this.disableFocusLock) {
 			this._focusLock = true;
 		}
