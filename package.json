@@ -52,9 +52,9 @@
     "type-detect": "1.0.0"
   },
   "dependencies": {
-    "d2l-colors": "BrightspaceUI/colors#semver:^4",
+    "d2l-colors": "BrightspaceUI/colors#dbatiste/dark-mode-1",
     "d2l-polymer-behaviors": "Brightspace/d2l-polymer-behaviors-ui#semver:^2",
-    "d2l-typography": "BrightspaceUI/typography#semver:^7",
+    "d2l-typography": "BrightspaceUI/typography#dbatiste/dark-mode-1",
     "@polymer/polymer": "^3.0.0",
     "@polymer/iron-resizable-behavior": "^3.0.0"
   }

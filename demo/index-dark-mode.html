@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+	<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+	<script type="module" src="../../d2l-typography/d2l-typography.js"></script>
+	<script type="module" src="../d2l-tooltip.js"></script>
+	<style>
+		body {
+			margin: 20px;
+		}
+
+		.hover-link-container {
+			padding: 0 120px;
+		}
+
+		.box {
+			width: 100px;
+			height: 100px;
+			background-color: #e57231;
+			display: inline-block;
+			color: White;
+			display: flex;
+			align-items: center;
+			text-align: center;
+		}
+
+		.container {
+			background: lightgoldenrodyellow;
+			width: 500px;
+			height: 500px;
+			overflow: hidden;
+			margin-top: 20px;
+			position: relative;
+			padding: 30px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.container .box {
+			display: inline-block;
+		}
+
+		.contained {
+			margin-top: 40px;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			html {
+				background-color: #262829;
+			}
+		}
+
+	</style>
+</head>
+<body class="d2l-typography">
+
+	<custom-style include="d2l-typography">
+		<style is="custom-style" include="d2l-typography">
+			.mixin-tooltip {
+				--d2l-tooltip-background-color: #ffffff;
+				--d2l-tooltip-border: 1px solid;
+				--d2l-tooltip-border-color: #d3d9e3;
+
+				--d2l-tooltip-mixin: {
+					width: 200px;
+					box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+					font-family: Lato;
+					line-height: 1;
+					color: #565a5c;
+				}
+			}
+		</style>
+	</custom-style>
+
+	<div class="hover-link-container">
+
+		<span class="box" id="bottom" tabindex="0">Hover me (bottom)</span>
+		<d2l-tooltip position="bottom" for="bottom">Bottom</d2l-tooltip>
+		<br>
+		<span class="box" id="top" tabindex="0">Hover me (top)</span>
+		<d2l-tooltip position="top" for="top">Top</d2l-tooltip>
+		<br>
+		<span class="box" id="left" tabindex="0">Hover me (left)</span>
+		<d2l-tooltip position="left" for="left">Left</d2l-tooltip>
+		<br>
+		<span class="box" id="right" tabindex="0">Hover me (right)</span>
+		<d2l-tooltip position="right" for="right">Right</d2l-tooltip>
+		<br>
+		<span class="box" id="mixin" tabindex="0">Mixin Tooltip (right)</span>
+		<d2l-tooltip class="mixin-tooltip" position="right" for="mixin">
+			Use custom parameters to style the tooltip.
+		</d2l-tooltip>
+		<br>
+		<span class="box" id="force">My tooltip is always visible</span>
+		<d2l-tooltip position="right" for="force" force-show="">Always visible</d2l-tooltip>
+		<br>
+		<span class="box" id="right-tap-toggle" tabindex="0">Tap me (right)</span>
+		<d2l-tooltip id="tap-toggle-tooltip" position="right" for="right-tap-toggle" tap-toggle="">Right Tap Toggle</d2l-tooltip>
+		<br>
+		<button id="aria-button">Focus me for aria-describedby</button>
+		<d2l-tooltip id="buttontooltip" position="right" for="aria-button">This is a button</d2l-tooltip>
+		<br>
+		<button id="aria-button2">Focus me, too</button>
+		<d2l-tooltip position="right" for="aria-button2">I have a generated id</d2l-tooltip>
+		<br>
+		<div class="container">
+			<div class="contained">
+				<span class="box" id="top-contained" tabindex="0">Hover me, I have boundaries!</span>
+				<d2l-tooltip tap-toggle="" position="top" for="top-contained">This is a tooltip positioned inside a box with "overflow: hidden"</d2l-tooltip>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
