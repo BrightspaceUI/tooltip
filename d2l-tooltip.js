@@ -319,6 +319,7 @@ Polymer({
 		this.dispatchEvent(new CustomEvent(
 			'd2l-tooltip-show', { bubbles: true, composed: true }
 		));
+		this.listen(this.document, 'keydown', '_onKeydown');
 		this.updatePosition();
 	},
 
@@ -331,6 +332,7 @@ Polymer({
 		this.dispatchEvent(new CustomEvent(
 			'd2l-tooltip-hide', { bubbles: true, composed: true }
 		));
+		this.unlisten(this.document, 'keydown', '_onKeydown');
 		this.unlisten(this.document, 'tap', '_documentClickListener');
 	},
 
@@ -528,7 +530,6 @@ Polymer({
 			this.listen(this._target, 'mouseleave', 'hide');
 			this.listen(this._target, 'blur', '_onBlur');
 			this.listen(this._target, 'tap', '_toggle');
-			this.listen(this._target, 'keydown', '_onKeydown');
 		}
 	},
 
@@ -574,7 +575,6 @@ Polymer({
 			this.unlisten(this._target, 'mouseleave', 'hide');
 			this.unlisten(this._target, 'blur', '_onBlur');
 			this.unlisten(this._target, 'tap', '_toggle');
-			this.unlisten(this._target, 'keydown', '_onKeydown');
 		}
 	},
 
