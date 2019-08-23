@@ -10,10 +10,10 @@ Polymer-based web component for a D2L tooltip
   then delete this comment!
 */
 import '@polymer/polymer/polymer-legacy.js';
-
-import 'd2l-colors/d2l-colors.js';
-import 'd2l-polymer-behaviors/d2l-id.js';
-import 'd2l-polymer-behaviors/d2l-dom.js';
+import '@brightspace-ui/core/components/colors/colors.js';
+import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
+import { getOffsetParent } from '@brightspace-ui/core/helpers/dom.js';
+import { clearDismissible, setDismissible } from '@brightspace-ui/core/helpers/dismissible.js';
 import 'd2l-typography/d2l-typography-shared-styles.js';
 import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
 import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
@@ -35,7 +35,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-tooltip">
 				border-color: var(--d2l-tooltip-border-color, var(--d2l-color-ferrite));
 				border-radius: 5px;
 				box-sizing: border-box;
-				color: var(--d2l-color-white);
+				color: #ffffff;
 				cursor: default;
 				display: none;
 				left: 0;
@@ -288,6 +288,10 @@ Polymer({
 
 	detached: function() {
 		this._removeListeners();
+		if (this._dismissibleId) {
+			clearDismissible(this._dismissibleId);
+			this._dismissibleId = null;
+		}
 	},
 
 	show: function() {
@@ -319,7 +323,10 @@ Polymer({
 		this.dispatchEvent(new CustomEvent(
 			'd2l-tooltip-show', { bubbles: true, composed: true }
 		));
-		this.listen(this.document, 'keydown', '_onKeydown');
+		this._dismissibleId = setDismissible(() => {
+			this._tappedOn = false;
+			this.hide();
+		});
 		this.updatePosition();
 	},
 
@@ -332,12 +339,15 @@ Polymer({
 		this.dispatchEvent(new CustomEvent(
 			'd2l-tooltip-hide', { bubbles: true, composed: true }
 		));
-		this.unlisten(this.document, 'keydown', '_onKeydown');
+		if (this._dismissibleId) {
+			clearDismissible(this._dismissibleId);
+			this._dismissibleId = null;
+		}
 		this.unlisten(this.document, 'tap', '_documentClickListener');
 	},
 
 	updatePosition: function() {
-		const offsetParent = D2L.Dom.getOffsetParent(this);
+		const offsetParent = getOffsetParent(this);
 		if (!this.customTarget && (!this._target || !offsetParent)) {
 			return;
 		}
@@ -379,7 +389,7 @@ Polymer({
 	},
 
 	_getScrollVals: function() {
-		const offsetParent = D2L.Dom.getOffsetParent(this);
+		const offsetParent = getOffsetParent(this);
 		if (offsetParent) {
 			var parentStyle = window.getComputedStyle(offsetParent);
 			return (parentStyle && parentStyle.getPropertyValue('position') === 'static') ?
@@ -558,7 +568,7 @@ Polymer({
 		this._removeListeners();
 		this._target = this.target;
 		if (this._target) {
-			this.id = this.id || D2L.Id.getUniqueId();
+			this.id = this.id || getUniqueId();
 			this._target.setAttribute('aria-live', 'polite');
 			this._target.setAttribute('aria-describedby', this.id);
 			if (this.tapToggle) {
@@ -580,13 +590,6 @@ Polymer({
 
 	_onIronResize: function() {
 		this.updatePosition();
-	},
-
-	_onKeydown: function(e) {
-		var keycode_esc = 27;
-		if (e.keyCode === keycode_esc) {
-			this._tappedOn = false;
-			this.hide();
-		}
 	}
+
 });
