@@ -560,7 +560,7 @@ Polymer({
 	_documentClickListener: function(e) {
 		if (e.target.id !== this._target.id) {
 			this._tappedOn = false;
-			this.hide(undefined, true);
+			this.hide();
 		}
 	},
 
