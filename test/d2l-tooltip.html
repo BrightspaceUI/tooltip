@@ -19,6 +19,15 @@
 				</div>
 			</template>
 		</test-fixture>
+		<test-fixture id="basic-delay">
+			<template>
+				<div>
+					<span id="basic-span-delay" tabindex="-1">Hover me for tips</span>
+					<d2l-tooltip tooltip-delay="500" for="basic-span-delay">If I got a problem then a problem's got a problem.</d2l-tooltip>
+					<a href="https://www.google.com">some link</a>
+				</div>
+			</template>
+		</test-fixture>
 		<test-fixture id="force-show">
 			<template>
 				<div>
@@ -56,6 +65,64 @@ describe('d2l-tooltip', function() {
 				});
 			});
 			tooltipFixture.querySelector('#basic-span').focus();
+		});
+
+		it('should not trigger the hide event from mouseleave when target is focused', function(done) {
+			const eventTimeout = setTimeout(function() {
+				expect(tooltip.hasAttribute('showing')).to.equal(true);
+				done();
+			}, 1000);
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				requestAnimationFrame(function() {
+					const mouseleaveEvent = new Event('mouseleave');
+					tooltipFixture.querySelector('span').dispatchEvent(mouseleaveEvent);
+				});
+			});
+			tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
+				clearTimeout(eventTimeout);
+				done('Tooltip hide event was triggered!');
+			});
+			tooltipFixture.querySelector('span').focus();
+		});
+
+		it('should trigger the hide event from blur when target is focused', function(done) {
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				requestAnimationFrame(function() {
+					const blurEvent = new Event('blur');
+					tooltipFixture.querySelector('span').dispatchEvent(blurEvent);
+				});
+			});
+			tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
+				requestAnimationFrame(function() {
+					expect(tooltip.hasAttribute('showing')).to.equal(false);
+					done();
+				});
+			});
+			tooltipFixture.querySelector('span').focus();
+		});
+
+	});
+
+	describe('basic-delayed', function() {
+
+		beforeEach(function(done) {
+			tooltipFixture = fixture('basic-delay');
+			tooltip = tooltipFixture.querySelector('d2l-tooltip');
+			flush(done);
+		});
+
+		it('should instantiate the element', function() {
+			expect(tooltip.is).to.equal('d2l-tooltip');
+		});
+
+		it('should trigger the show event when target is focused', function(done) {
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				requestAnimationFrame(function() {
+					expect(tooltip.hasAttribute('showing')).to.equal(true);
+					done();
+				});
+			});
+			tooltipFixture.querySelector('#basic-span-delay').focus();
 		});
 
 		it('should not trigger the hide event from mouseleave when target is focused', function(done) {

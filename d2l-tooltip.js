@@ -257,7 +257,16 @@ Polymer({
 			value: false,
 			reflectToAttribute: true,
 			observer: '_updateForceShow'
+		},
+		tooltipDelay: {
+			type: Number,
+			value: 0,
+			reflectToAttribute: true
+		},
+		_pendingToolTip: {
+			type: Object
 		}
+
 	},
 
 	listeners: {
@@ -298,7 +307,6 @@ Polymer({
 		if (this.showing) {
 			return;
 		}
-
 		/* There seems to be an issue in Polymer v2, within Chrome, while using the wc-shadydom=true flag
 		   which results in the textContent property not containing the element text. Instead the only
 		   place it can be found is on this.innerText. */
@@ -318,23 +326,25 @@ Polymer({
 				return;
 			}
 		}
-
-		this.showing = true;
-		this.dispatchEvent(new CustomEvent(
-			'd2l-tooltip-show', { bubbles: true, composed: true }
-		));
-		this._dismissibleId = setDismissible(() => {
-			this._tappedOn = false;
-			this.hide();
-		});
-		this.updatePosition();
+		clearTimeout(this._pendingToolTip);
+		this._pendingToolTip = setTimeout( ()=> {
+			this.showing = true;
+			this.dispatchEvent(new CustomEvent(
+				'd2l-tooltip-show', { bubbles: true, composed: true }
+			));
+			this._dismissibleId = setDismissible(() => {
+				this._tappedOn = false;
+				this.hide();
+			});
+			this.updatePosition();
+		}, this.tooltipDelay);
 	},
 
 	hide: function() {
+		clearTimeout(this._pendingToolTip);
 		if (this._tappedOn || !this.showing || this._focusLock) {
 			return;
 		}
-
 		this.showing = false;
 		this.dispatchEvent(new CustomEvent(
 			'd2l-tooltip-hide', { bubbles: true, composed: true }
