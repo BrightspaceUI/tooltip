@@ -23,7 +23,7 @@
 			<template>
 				<div>
 					<span id="basic-span-delay" tabindex="-1">Hover me for tips</span>
-					<d2l-tooltip tooltip-delay="500" for="basic-span-delay">If I got a problem then a problem's got a problem.</d2l-tooltip>
+					<d2l-tooltip delay="3000" for="basic-span-delay">If I got a problem then a problem's got a problem.</d2l-tooltip>
 					<a href="https://www.google.com">some link</a>
 				</div>
 			</template>
@@ -103,62 +103,58 @@ describe('d2l-tooltip', function() {
 
 	});
 
-	describe('basic-delayed', function() {
-
-		beforeEach(function(done) {
+	describe('basic delayed', function() {
+		beforeEach(function(){
+			this.clock = sinon.useFakeTimers();
 			tooltipFixture = fixture('basic-delay');
 			tooltip = tooltipFixture.querySelector('d2l-tooltip');
-			flush(done);
+
+		});
+		afterEach(function(){
+			this.clock.restore();
 		});
 
-		it('should instantiate the element', function() {
-			expect(tooltip.is).to.equal('d2l-tooltip');
-		});
-
-		it('should trigger the show event when target is focused', function(done) {
+		it('should not render if focus is lost before tooltip is rendered', function(done) {
 			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
-				requestAnimationFrame(function() {
-					expect(tooltip.hasAttribute('showing')).to.equal(true);
-					done();
-				});
+				expect.fail('tooltip should not have been shown');
 			});
 			tooltipFixture.querySelector('#basic-span-delay').focus();
-		});
-
-		it('should not trigger the hide event from mouseleave when target is focused', function(done) {
-			const eventTimeout = setTimeout(function() {
-				expect(tooltip.hasAttribute('showing')).to.equal(true);
+			this.clock.tick(500);
+			tooltipFixture.querySelector('#basic-span-delay').blur();
+			this.clock.tick(5000);
+			requestAnimationFrame(function() {
+				expect(tooltip.hasAttribute('showing')).to.be.equal(false);
 				done();
-			}, 1000);
-			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
-				requestAnimationFrame(function() {
-					const mouseleaveEvent = new Event('mouseleave');
-					tooltipFixture.querySelector('span').dispatchEvent(mouseleaveEvent);
-				});
 			});
-			tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
-				clearTimeout(eventTimeout);
-				done('Tooltip hide event was triggered!');
-			});
-			tooltipFixture.querySelector('span').focus();
 		});
+		it('should not render if focus is lost before tooltip is rendered', function(done) {
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				expect.fail('tooltip should not have been shown');
+			});
+			for (var i=0; i < 5; i++) {
+				tooltipFixture.querySelector('#basic-span-delay').focus();
+				this.clock.tick(500);
+				tooltipFixture.querySelector('#basic-span-delay').blur();
+			}
 
-		it('should trigger the hide event from blur when target is focused', function(done) {
+			requestAnimationFrame(function() {
+				expect(tooltip.hasAttribute('showing')).to.be.equal(false);
+				done();
+			});
+		});
+		it('should  render if focus is maintained for delay before tooltip is rendered', function(done) {
+
 			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
 				requestAnimationFrame(function() {
-					const blurEvent = new Event('blur');
-					tooltipFixture.querySelector('span').dispatchEvent(blurEvent);
-				});
-			});
-			tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
-				requestAnimationFrame(function() {
-					expect(tooltip.hasAttribute('showing')).to.equal(false);
+					expect(tooltip.hasAttribute('showing')).to.be.equal(true);
 					done();
 				});
 			});
-			tooltipFixture.querySelector('span').focus();
-		});
 
+			tooltipFixture.querySelector('#basic-span-delay').focus();
+			this.clock.tick(5000);
+
+		});
 	});
 	describe('force-show', function() {
 

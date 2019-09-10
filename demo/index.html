@@ -121,13 +121,13 @@ $_documentContainer.innerHTML = `<div class="hover-link-container">
 		<d2l-tooltip position="right" for="force" force-show="">Always visible</d2l-tooltip>
 		<br>
 		<span class="box" id="delay" tabindex="0" >Hover me (delayed bottom)</span>
-		<d2l-tooltip position="bottom" for="delay" tooltip-delay="1000">I was delayed, I only show if the focus is still on my for</d2l-tooltip>
+		<d2l-tooltip position="bottom" for="delay" delay="1000">I was delayed, I only show if the focus is still on my for</d2l-tooltip>
 		<br>
 		<span class="box" id="right-tap-toggle" tabindex="0">Tap me (right)</span>
 		<d2l-tooltip id="tap-toggle-tooltip" position="right" for="right-tap-toggle" tap-toggle="">Right Tap Toggle</d2l-tooltip>
 		<br>
 		<span class="box" id="right-tap-toggle-delayed" tabindex="0">Tap me (right delayed)</span>
-		<d2l-tooltip id="tap-toggle-tooltip-delayed" position="right" for="right-tap-toggle-delayed" tap-toggle="" tooltip-delay="1000">Right Tap Toggle delayed</d2l-tooltip>
+		<d2l-tooltip id="tap-toggle-tooltip-delayed" position="right" for="right-tap-toggle-delayed" tap-toggle="" delay="1000">Right Tap Toggle delayed</d2l-tooltip>
 		<br>
 		<button id="aria-button">Focus me for aria-describedby</button>
 		<d2l-tooltip id="buttontooltip" position="right" for="aria-button">This is a button</d2l-tooltip>

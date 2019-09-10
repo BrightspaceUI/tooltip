@@ -336,7 +336,7 @@ Polymer({
 				this.hide();
 			});
 			this.updatePosition();
-		}, this.tooltipDelay);
+		}, this.delay);
 	},
 
 	hide: function() {
