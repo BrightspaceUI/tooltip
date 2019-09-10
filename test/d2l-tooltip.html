@@ -128,7 +128,7 @@ describe('d2l-tooltip', function() {
 				done();
 			});
 		});
-		it('should not render if focus is lost before tooltip is rendered', function(done) {
+		it('should not render if focus is lost multiple times before tooltip is rendered', function(done) {
 			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
 				expect.fail('tooltip should not have been shown');
 			});
