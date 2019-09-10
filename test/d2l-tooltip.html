@@ -104,14 +104,15 @@ describe('d2l-tooltip', function() {
 	});
 
 	describe('basic delayed', function() {
-		beforeEach(function(){
-			this.clock = sinon.useFakeTimers();
+		var clock;
+		beforeEach(function() {
+			clock = sinon.useFakeTimers();
 			tooltipFixture = fixture('basic-delay');
 			tooltip = tooltipFixture.querySelector('d2l-tooltip');
 
 		});
-		afterEach(function(){
-			this.clock.restore();
+		afterEach(function() {
+			clock.restore();
 		});
 
 		it('should not render if focus is lost before tooltip is rendered', function(done) {
@@ -119,9 +120,9 @@ describe('d2l-tooltip', function() {
 				expect.fail('tooltip should not have been shown');
 			});
 			tooltipFixture.querySelector('#basic-span-delay').focus();
-			this.clock.tick(500);
+			clock.tick(500);
 			tooltipFixture.querySelector('#basic-span-delay').blur();
-			this.clock.tick(5000);
+			clock.tick(5000);
 			requestAnimationFrame(function() {
 				expect(tooltip.hasAttribute('showing')).to.be.equal(false);
 				done();
@@ -131,9 +132,9 @@ describe('d2l-tooltip', function() {
 			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
 				expect.fail('tooltip should not have been shown');
 			});
-			for (var i=0; i < 5; i++) {
+			for (var i = 0; i < 5; i++) {
 				tooltipFixture.querySelector('#basic-span-delay').focus();
-				this.clock.tick(500);
+				clock.tick(500);
 				tooltipFixture.querySelector('#basic-span-delay').blur();
 			}
 
@@ -152,7 +153,7 @@ describe('d2l-tooltip', function() {
 			});
 
 			tooltipFixture.querySelector('#basic-span-delay').focus();
-			this.clock.tick(5000);
+			clock.tick(5000);
 
 		});
 	});
