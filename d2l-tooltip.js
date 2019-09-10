@@ -258,13 +258,12 @@ Polymer({
 			reflectToAttribute: true,
 			observer: '_updateForceShow'
 		},
-		tooltipDelay: {
+		delay: {
 			type: Number,
-			value: 0,
-			reflectToAttribute: true
+			value: 0
 		},
 		_pendingToolTip: {
-			type: Object
+			type: Number
 		}
 
 	},
