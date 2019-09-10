@@ -327,7 +327,7 @@ Polymer({
 			}
 		}
 		clearTimeout(this._pendingToolTip);
-		this._pendingToolTip = setTimeout( ()=> {
+		this._pendingToolTip = setTimeout(()=> {
 			this.showing = true;
 			this.dispatchEvent(new CustomEvent(
 				'd2l-tooltip-show', { bubbles: true, composed: true }
