@@ -19,6 +19,15 @@
 				</div>
 			</template>
 		</test-fixture>
+		<test-fixture id="basic-delay">
+			<template>
+				<div>
+					<span id="basic-span-delay" tabindex="-1">Hover me for tips</span>
+					<d2l-tooltip delay="3000" for="basic-span-delay">If I got a problem then a problem's got a problem.</d2l-tooltip>
+					<a href="https://www.google.com">some link</a>
+				</div>
+			</template>
+		</test-fixture>
 		<test-fixture id="force-show">
 			<template>
 				<div>
@@ -92,6 +101,61 @@ describe('d2l-tooltip', function() {
 			tooltipFixture.querySelector('span').focus();
 		});
 
+	});
+
+	describe('basic delayed', function() {
+		var clock;
+		beforeEach(function() {
+			clock = sinon.useFakeTimers();
+			tooltipFixture = fixture('basic-delay');
+			tooltip = tooltipFixture.querySelector('d2l-tooltip');
+
+		});
+		afterEach(function() {
+			clock.restore();
+		});
+
+		it('should not render if focus is lost before tooltip is rendered', function(done) {
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				expect.fail('tooltip should not have been shown');
+			});
+			tooltipFixture.querySelector('#basic-span-delay').focus();
+			clock.tick(500);
+			tooltipFixture.querySelector('#basic-span-delay').blur();
+			clock.tick(5000);
+			requestAnimationFrame(function() {
+				expect(tooltip.hasAttribute('showing')).to.be.equal(false);
+				done();
+			});
+		});
+		it('should not render if focus is lost multiple times before tooltip is rendered', function(done) {
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				expect.fail('tooltip should not have been shown');
+			});
+			for (var i = 0; i < 5; i++) {
+				tooltipFixture.querySelector('#basic-span-delay').focus();
+				clock.tick(500);
+				tooltipFixture.querySelector('#basic-span-delay').blur();
+			}
+
+			requestAnimationFrame(function() {
+				expect(tooltip.hasAttribute('showing')).to.be.equal(false);
+				done();
+			});
+		});
+		it('should  render if focus is maintained for delay before tooltip is rendered', function(done) {
+
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				requestAnimationFrame(function() {
+					expect(tooltip.hasAttribute('showing')).to.be.equal(true);
+					done();
+				});
+			});
+
+			tooltipFixture.querySelector('#basic-span-delay').focus();
+			clock.tick(5000);
+
+		});
 	});
 	describe('force-show', function() {
 
