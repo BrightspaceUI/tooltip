@@ -295,6 +295,7 @@ Polymer({
 	},
 
 	detached: function() {
+		clearTimeout(this._pendingToolTip);
 		this._removeListeners();
 		if (this._dismissibleId) {
 			clearDismissible(this._dismissibleId);
