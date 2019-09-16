@@ -2,7 +2,7 @@
   "description": "Polymer-based web component for D2L tooltips.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Brightspace/d2l-tooltip.git"
+    "url": "https://github.com/BrightspaceUI/tooltip.git"
   },
   "name": "d2l-tooltip",
   "scripts": {
