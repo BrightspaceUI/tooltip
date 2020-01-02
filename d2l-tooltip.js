@@ -20,7 +20,7 @@ import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<dom-module id="d2l-tooltip">
+$_documentContainer.innerHTML = /*html*/`<dom-module id="d2l-tooltip">
 	<template strip-whitespace="">
 		<style>
 			:host {
@@ -433,6 +433,10 @@ Polymer({
 		return this.boundary.right - this.boundary.left;
 	},
 
+	get boundaryCentre() {
+		return this.boundary.left + ((this.boundary.right - this.boundary.left) / 2);
+	},
+
 	_getTooltipPositions: function(targetPositions, thisRect, targetRect) {
 		var offsets = this._getOffsets(targetRect, thisRect);
 		var scrollVals = this._getScrollVals();
@@ -491,7 +495,9 @@ Polymer({
 	},
 
 	_shouldPositionUsingLeft: function(targetPositions) {
-		return !this._useBoundaries() || targetPositions.horizontalCenter > this.boundaryWidth / 4;
+		return !this._useBoundaries() ||
+			targetPositions.horizontalCenter > this.boundaryWidth / 4 ||
+			targetPositions.horizontalCenter < this.boundaryCentre;
 	},
 
 	_setTooltipStyle: function(tooltipPositions, targetPositions) {
