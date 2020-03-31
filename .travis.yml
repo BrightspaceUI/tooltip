@@ -1,17 +1,7 @@
 language: node_js
 node_js: node
-addons:
-  chrome: stable
 script:
 - npm run lint
-- |
-  if [ $TRAVIS_PULL_REQUEST != false ] && [ $TRAVIS_SECURE_ENV_VARS == true ]; then
-    echo "Pull request with secure environment variables, running Sauce tests...";
-    npm run test:polymer:sauce || travis_terminate 1;
-  else
-    echo "Not a pull request and/or no secure environment variables, running headless tests...";
-    npm run test:polymer:local || travis_terminate 1;
-  fi
 after_success:
 - frauci-update-version -d=skip && export TRAVIS_TAG=$(frauci-get-version)
 deploy:
@@ -23,6 +13,4 @@ env:
   global:
   - OWNER_NAME=BrightspaceUI
   - REPO_NAME=tooltip
-  - SAUCE_USERNAME: Desire2Learn
-  - secure: Uj0dcZxTrBnUqU3g7uYXgEtJNSy1otnaP0ND96Sxus5lvjwhZ6z3SKHRwgxzJ8pIXI41Enx1LeLJIROSreXbo6rv4iw9K7y233yQ0jo5d7WxU+8ZyfAWpZ7IC3zT2i3mfpkcR9Hv53CV/eLwLWdEKwGf8w1aqPUApd+/USMsbT2oIbPIImQrC8vihJW1k0W2Gj/aww9h7NzEbxycI9Ke752JStfHrsOojqDekOu3/6ejwWaezWypky9533/eTyiBjVZINbi+FHTjYNl0kekZS784405qbV5XsPPRF4FtJBNZ22R7rO0hNTSFb68f1fjZ66WS4xlFcU821sXoxRMubhN8rlfUHmf/ZN22DAm0Rr69dgRi5CQ8PPqlXsxceEWkqOnOtoRvnoefFkxLX9yWrgZnU71fbPBeenvzTTtK5CwiuzI3crps97R99KsyLBSibAaULABseIy0WEoglBUPZ/bj/gphfb5aCH2qIIPIqHiJ+tbwSX1HOJVIFc1Z0IqWxspQaKAPGYHGgI26wV0w+fbgk+tDUkNewb6uim9SpXkPCRMl2/y2AgnugqD04vZAVV/xJKtW/urcFBinNUjsxrUnpuLlIZz2McN0M6wqBoQVybAfAPCy+9VRgvmIxXntfcfluHXVOR5/wNrPZNNblMTSM8BCGBCDljJm1lxF1Yo=
   - secure: arpN5ttvh5qKysySTUyLem2nV4zKXlhUtEiG7JSLTMHVFuxVtVRba016RHvTIHuX7rGoI1KnrVsiGBcV/bTla3+8C/WG+yJloJTyl5TtabGcUWct8vA8EZV5aiHlvowMydyzWAkAoybc515VIvkBtezREvSHW7h33Y1lV6Fsmtga6s3VQnTqSiZX0QRfXlSvQvAWMH2vmMAcemdG3OoovlgZ5twmKxSCXM7KnzUui3+ZReZWUh9ZC7PZVQmfzcVDg1Nqo+d7BSAp8vbsIc2c9B/v/o16bhFnVSnlOagZ2k/raL8gh+B4WZnI5i0N+daXIg5lSOXl7RGQhL8oovTSS+Y9ypelAVMQAAIsxGBmAK2Dm52Rbx2mNXbobuOnMXQhQlw9N07LroSBTVAtfME5832Ondrn5coEDRFlRno7aBdFZHMXBazRNPogQNKv3jeDjWuNA2xVOwF63K5xrlDUmT78ckoxn8OB4CFgttzAPgjJYEsa6JmTrkcTYC8yCWIwJ8Flq11AdU3KWBstFty7ex+0MGeWpdo9q/EWjLwE9AXEz6g3m0Hj40omtz9tNJlInchEZRvuqCI6xSEXK0veTNrLWaWEtWcsscajqJ5A0+9gEZR+zhRWZcgImnMkTxGLETdxicA6UjkxbHc2Xn8LJoRvT8Cx4/qngd6wb/lhFOM=
